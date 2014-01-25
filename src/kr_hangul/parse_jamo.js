@@ -137,6 +137,8 @@ function parse_jamo(str, jamo) {
             
             if ((get_base(lead) === _JAMO_LEAD) && (get_base(vowel) === _JAMO_VOWEL))
                 return join(lead, vowel, '');
+            
+            // TODO: support for merging vowels together
         } else {
             var buffer = split(str);
             var vowel = get_component(jamo, VOWEL);
@@ -149,6 +151,8 @@ function parse_jamo(str, jamo) {
                 if (buffer[2] === "")
                     return join(buffer[0], buffer[1], trail);
             }
+            
+            // TODO: support for double consonant padchims
         }
     }
     
