@@ -38,12 +38,18 @@ var TRAIL = {
 
 
 function is_jamo(str) {
+    if (typeof str !== "string")
+        return false;
+    
     if ((str.charCodeAt(0) >= _COMP_OFFS) && (str.charCodeAt(0) <= 0x318F))
         return true;
     return false;
 }
 
 function is_syllable(str) {
+    if (typeof str !== "string")
+        return false;
+    
     if ((str.charCodeAt(0) >= _BASE_OFFS) && (str.charCodeAt(0) <= 0xD7A3))
         return true;
     return false;
@@ -131,28 +137,45 @@ function split(str) {
 function parse_jamo(str, jamo) {
     // make sure merging is actually a valid option
     if (is_jamo(jamo) && is_hangul(str)) {
+        
+        // merge jamo with jamo
         if (is_jamo(str)) {
             var lead = get_component(str, LEAD);
             var vowel = get_component(jamo, VOWEL);
             
             if ((get_base(lead) === _JAMO_LEAD) && (get_base(vowel) === _JAMO_VOWEL))
                 return join(lead, vowel, '');
-            
-            // TODO: support for merging vowels together
+        
+        // merge syllable with jamo
         } else {
             var buffer = split(str);
-            var vowel = get_component(jamo, VOWEL);
-            var trail = get_component(jamo, TRAIL);
             
-            if (get_base(vowel) === _JAMO_VOWEL) {
+            // merging vowel to existing syllable
+            if (get_base(get_component(jamo, VOWEL)) === _JAMO_VOWEL) {
+                // if syllable has padchim, split into two complete syllables:
                 if (buffer[2] !== "")
-                    return join(buffer[0], buffer[1], "") + join(normalise(buffer[2], TRAIL), vowel, "");
-            } else if (get_base(trail) === _JAMO_TRAIL) {
+                    return join(buffer[0], buffer[1], '') + join(normalise(buffer[2], TRAIL), jamo, '');
+                
+                // attempt vowel mergers:
+                if (buffer[1] === 'ㅗ') {
+                    if (jamo === 'ㅏ') return join(buffer[0], String.fromCharCode(0x116A), '');
+                    if (jamo === 'ㅐ') return join(buffer[0], String.fromCharCode(0x116B), '');
+                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x116C), '');
+                } else if (buffer[1] === 'ㅜ') {
+                    if (jamo === 'ㅓ') return join(buffer[0], String.fromCharCode(0x116F), '');
+                    if (jamo === 'ㅔ') return join(buffer[0], String.fromCharCode(0x1170), '');
+                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x1171), '');
+                } else if (buffer[1] === 'ㅡ') {
+                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x1174), ''); 
+                }
+                    
+            // merging consonant to existing syllable
+            } else if (get_base(get_component(jamo, TRAIL)) === _JAMO_TRAIL) {
                 if (buffer[2] === "")
-                    return join(buffer[0], buffer[1], trail);
+                    return join(buffer[0], buffer[1], jamo);
+                
+                // TODO: support for double consonant padchims
             }
-            
-            // TODO: support for double consonant padchims
         }
     }
     

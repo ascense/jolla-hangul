@@ -11,6 +11,5 @@ Based on the Japanese IME implementation found here: https://github.com/BeholdMy
 TODO
 =====
 
- * Support for vowel merging (syllables with dipthongs)
  * Support for syllables with multiple end consonants
  * Correct (or a more language appropriate) layout for symbol keys
