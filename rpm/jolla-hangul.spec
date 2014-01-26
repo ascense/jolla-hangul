@@ -1,5 +1,5 @@
 Name: jolla-hangul
-Version: 0.01
+Version: 0.1
 Release: 1%{?dist}
 Summary: Hangul layout and input method for Sailfish OS
 License: LGPLv2
@@ -24,6 +24,12 @@ Allows you to type in Hangul on Sailfish OS.
 #make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}/usr/share/maliit/plugins/com/jolla/layouts/
 cp -r src/kr_hangul* %{buildroot}/usr/share/maliit/plugins/com/jolla/layouts/
+
+%post
+su nemo -c "/bin/systemctl --user restart maliit-server.service"
+
+%postun
+su nemo -c "/bin/systemctl --user restart maliit-server.service"
 
 %clean
 rm -rf %{buildroot}
