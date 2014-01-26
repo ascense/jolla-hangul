@@ -36,6 +36,14 @@ var TRAIL = {
     'ㅎ': 0x11C2
 };
 
+// consonant combinations that can form compound consonant padchims
+var TRAIL_COMPOUND = {
+    'ㄱㅅ': 0x11AA, 'ㄴㅈ': 0x11AC, 'ㄴㅎ': 0x11AD,
+    'ㄹㄱ': 0x11B0, 'ㄹㅁ': 0x11B1, 'ㄹㅂ': 0x11B2,
+    'ㄹㅅ': 0x11B3, 'ㄹㅌ': 0x11B4, 'ㄹㅌ': 0x11B5,
+    'ㄹㅎ': 0x11B6, 'ㅂㅅ': 0x11B9
+};
+
 
 function is_jamo(str) {
     if (typeof str !== "string")
@@ -155,8 +163,14 @@ function parse_jamo(str, jamo) {
                 // if syllable has padchim, split into two complete syllables:
                 if (buffer[2] !== "") {
                     // verify that the padchim is a legal initial consonant:
-                    if (get_component(buffer[2], LEAD) !== buffer[2])
+                    if (get_component(buffer[2], LEAD) !== buffer[2]) {
                         return join(buffer[0], buffer[1], '') + join(normalise(buffer[2], TRAIL), jamo, '');
+                    } else {
+                        // if the padchim is a compound consonant, we want to split it:
+                        var split_compound = normalise(buffer[2], TRAIL_COMPOUND);
+                        if (split_compound !== buffer[2])
+                            return join(buffer[0], buffer[1], split_compound[0]) + join(split_compound[1], jamo, '');
+                    }
                     return str + jamo;
                 }
                 
@@ -176,29 +190,16 @@ function parse_jamo(str, jamo) {
             // merging consonant to existing syllable
             } else if (get_base(get_component(jamo, TRAIL)) === _JAMO_TRAIL) {
                 if (buffer[2] === "") {
-					// verify that the consonant is a legal trailing consonant:
-					if (get_component(jamo, TRAIL) !== jamo)
-						return join(buffer[0], buffer[1], jamo);
-					return str + jamo;
-				}
+                    // verify that the consonant is a legal trailing consonant:
+                    if (get_component(jamo, TRAIL) !== jamo)
+                        return join(buffer[0], buffer[1], jamo);
+                    return str + jamo;
+                }
                 
                 // attempt consonant mergers:
-                if (buffer[2] === 'ㄱ') {
-                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AA));
-                } else if (buffer[2] === 'ㄴ') {
-                    if (jamo === 'ㅈ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AC));
-                    if (jamo === 'ㅎ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AD));
-                } else if (buffer[2] === 'ㄹ') {
-                    if (jamo === 'ㄱ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B0));
-                    if (jamo === 'ㅁ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B1));
-                    if (jamo === 'ㅂ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B2));
-                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B3));
-                    if (jamo === 'ㅌ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B4));
-                    if (jamo === 'ㅍ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B5));
-                    if (jamo === 'ㅎ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B6));
-                } else if (buffer[2] === 'ㅂ') {
-                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B9));
-                }
+                var trail = TRAIL_COMPOUND[buffer[2] + jamo];
+                if (trail != null)
+                    return join(buffer[0], buffer[1], String.fromCharCode(trail));
             }
         }
     }
