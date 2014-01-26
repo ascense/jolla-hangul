@@ -153,8 +153,12 @@ function parse_jamo(str, jamo) {
             // merging vowel to existing syllable
             if (get_base(get_component(jamo, VOWEL)) === _JAMO_VOWEL) {
                 // if syllable has padchim, split into two complete syllables:
-                if (buffer[2] !== "")
-                    return join(buffer[0], buffer[1], '') + join(normalise(buffer[2], TRAIL), jamo, '');
+                if (buffer[2] !== "") {
+                    // verify that the padchim is a legal initial consonant:
+                    if (get_component(buffer[2], LEAD) !== buffer[2])
+                        return join(buffer[0], buffer[1], '') + join(normalise(buffer[2], TRAIL), jamo, '');
+                    return str + jamo;
+                }
                 
                 // attempt vowel mergers:
                 if (buffer[1] === 'ㅗ') {
@@ -174,7 +178,23 @@ function parse_jamo(str, jamo) {
                 if (buffer[2] === "")
                     return join(buffer[0], buffer[1], jamo);
                 
-                // TODO: support for double consonant padchims
+                // attempt consonant mergers:
+                if (buffer[2] === 'ㄱ') {
+                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AA));
+                } else if (buffer[2] === 'ㄴ') {
+                    if (jamo === 'ㅈ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AC));
+                    if (jamo === 'ㅎ') return join(buffer[0], buffer[1], String.fromCharCode(0x11AD));
+                } else if (buffer[2] === 'ㄹ') {
+                    if (jamo === 'ㄱ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B0));
+                    if (jamo === 'ㅁ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B1));
+                    if (jamo === 'ㅂ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B2));
+                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B3));
+                    if (jamo === 'ㅌ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B4));
+                    if (jamo === 'ㅍ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B5));
+                    if (jamo === 'ㅎ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B6));
+                } else if (buffer[2] === 'ㅂ') {
+                    if (jamo === 'ㅅ') return join(buffer[0], buffer[1], String.fromCharCode(0x11B9));
+                }
             }
         }
     }
