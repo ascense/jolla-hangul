@@ -45,7 +45,7 @@ KeyboardLayout {
         CharacterKey { caption: "ㅈ"; captionShifted: "ㅉ"; symView: "2"; symView2: "£" }
         CharacterKey { caption: "ㄷ"; captionShifted: "ㄸ"; symView: "3"; symView2: "$"; accents: "eèéêë€"; accentsShifted: "EÈÉÊË€" }
         CharacterKey { caption: "ㄱ"; captionShifted: "ㄲ"; symView: "4"; symView2: "¥" }
-        CharacterKey { caption: "ㅅ"; captionShifted: "ㅆ"; symView: "5"; symView2: "" }
+        CharacterKey { caption: "ㅅ"; captionShifted: "ㅆ"; symView: "5"; symView2: "₹"; accents: "tþ"; accentsShifted: "TÞ" }
         CharacterKey { caption: "ㅛ"; captionShifted: "ㅛ"; symView: "6"; symView2: "%"; accents: "yý¥"; accentsShifted: "YÝ¥" }
         CharacterKey { caption: "ㅕ"; captionShifted: "ㅕ"; symView: "7"; symView2: "<"; accents: "uûùúü"; accentsShifted: "UÛÙÚÜ" }
         CharacterKey { caption: "ㅑ"; captionShifted: "ㅑ"; symView: "8"; symView2: ">"; accents: "iîïìí"; accentsShifted: "IÎÏÌÍ" }

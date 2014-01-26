@@ -175,8 +175,12 @@ function parse_jamo(str, jamo) {
                     
             // merging consonant to existing syllable
             } else if (get_base(get_component(jamo, TRAIL)) === _JAMO_TRAIL) {
-                if (buffer[2] === "")
-                    return join(buffer[0], buffer[1], jamo);
+                if (buffer[2] === "") {
+					// verify that the consonant is a legal trailing consonant:
+					if (get_component(jamo, TRAIL) !== jamo)
+						return join(buffer[0], buffer[1], jamo);
+					return str + jamo;
+				}
                 
                 // attempt consonant mergers:
                 if (buffer[2] === 'ㄱ') {
