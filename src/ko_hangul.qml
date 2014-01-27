@@ -1,14 +1,14 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "kr_hangul"
+import "ko_hangul"
 import ".."
 
 KeyboardLayout {
-    type: "kr_hangul"
+    type: "ko_KR"
     
-    KrInputHandler {
-        id: krInputHandler
+    KoInputHandler {
+        id: koInputHandler
     }
     
     Component.onCompleted: init()
@@ -34,9 +34,9 @@ KeyboardLayout {
         if (keyboard.allowLayoutChanges && keyboard.inputHandler == pasteInputHandler &&
                 canvas.layoutRow.layout != null && canvas.layoutRow.layout.type == type) {
             var oldHandler = keyboard.inputHandler
-            keyboard.inputHandler = krInputHandler
+            keyboard.inputHandler = koInputHandler
             oldHandler.active = false
-            krInputHandler.active = true
+            koInputHandler.active = true
         }
     }
     

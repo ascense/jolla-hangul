@@ -1,7 +1,7 @@
 Name: jolla-hangul
-Version: 0.1
+Version: 0.2
 Release: 1%{?dist}
-Summary: Hangul layout and input method for Sailfish OS
+Summary: Korean (hangul) input method for Sailfish OS
 License: LGPLv2
 Source: %{name}-%{version}.tar.gz
 URL: https://github.com/Ascense/jolla-hangul
@@ -9,7 +9,7 @@ Requires:   jolla-keyboard
 Requires:   jolla-xt9
 
 %description
-Allows you to type in Hangul on Sailfish OS.
+Korean (hangul) input method and virtual keyboard layout for Sailfish OS.
 
 %define debug_package %{nil}
 
@@ -23,7 +23,7 @@ Allows you to type in Hangul on Sailfish OS.
 #rm -rf %{buildroot}
 #make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}/usr/share/maliit/plugins/com/jolla/layouts/
-cp -r src/kr_hangul* %{buildroot}/usr/share/maliit/plugins/com/jolla/layouts/
+cp -r src/ko_hangul* %{buildroot}/usr/share/maliit/plugins/com/jolla/layouts/
 
 %post
 su nemo -c "/bin/systemctl --user restart maliit-server.service"
@@ -35,7 +35,7 @@ su nemo -c "/bin/systemctl --user restart maliit-server.service"
 rm -rf %{buildroot}
 
 %files
-/usr/share/maliit/plugins/com/jolla/layouts/kr_hangul.qml
-/usr/share/maliit/plugins/com/jolla/layouts/kr_hangul.conf
-/usr/share/maliit/plugins/com/jolla/layouts/kr_hangul/KrInputHandler.qml
-/usr/share/maliit/plugins/com/jolla/layouts/kr_hangul/parse_jamo.js
+/usr/share/maliit/plugins/com/jolla/layouts/ko_hangul.qml
+/usr/share/maliit/plugins/com/jolla/layouts/ko_hangul.conf
+/usr/share/maliit/plugins/com/jolla/layouts/ko_hangul/KoInputHandler.qml
+/usr/share/maliit/plugins/com/jolla/layouts/ko_hangul/parser.js

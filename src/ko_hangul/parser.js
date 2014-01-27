@@ -1,6 +1,8 @@
 ﻿
 /**
-/ Library for combining Hangul Jamo into syllables, based on:
+/ Library for combining Hangul Jamo into syllables.
+/
+/ References for hangul implementation in unicode:
 / http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html
 / http://www.decodeunicode.org/en/hangul_jamo
 / http://www.unicode.org/faq/korean.html
@@ -36,7 +38,11 @@ var TRAIL = {
     'ㅎ': 0x11C2
 };
 
-// consonant combinations that can form compound consonant padchims
+// mappings for legal vowel diphthongs and compound consonant padchims
+var VOWEL_COMPOUND = {
+    'ㅗㅏ': 0x116A, 'ㅗㅐ': 0x116B, 'ㅗㅣ': 0x116C, 'ㅜㅓ': 0x116F,
+    'ㅜㅔ': 0x1170, 'ㅜㅣ': 0x1171, 'ㅡㅣ': 0x1174
+}
 var TRAIL_COMPOUND = {
     'ㄱㅅ': 0x11AA, 'ㄴㅈ': 0x11AC, 'ㄴㅎ': 0x11AD,
     'ㄹㄱ': 0x11B0, 'ㄹㅁ': 0x11B1, 'ㄹㅂ': 0x11B2,
@@ -142,7 +148,7 @@ function split(str) {
 }
 
 // merge new jamo with the existing string
-function parse_jamo(str, jamo) {
+function add_jamo(str, jamo) {
     // make sure merging is actually a valid option
     if (is_jamo(jamo) && is_hangul(str)) {
         
@@ -167,25 +173,17 @@ function parse_jamo(str, jamo) {
                         return join(buffer[0], buffer[1], '') + join(normalise(buffer[2], TRAIL), jamo, '');
                     } else {
                         // if the padchim is a compound consonant, we want to split it:
-                        var split_compound = normalise(buffer[2], TRAIL_COMPOUND);
-                        if (split_compound !== buffer[2])
-                            return join(buffer[0], buffer[1], split_compound[0]) + join(split_compound[1], jamo, '');
+                        var split_trail = normalise(buffer[2], TRAIL_COMPOUND);
+                        if (split_trail !== buffer[2])
+                            return join(buffer[0], buffer[1], split_trail[0]) + join(split_trail[1], jamo, '');
                     }
                     return str + jamo;
                 }
                 
                 // attempt vowel mergers:
-                if (buffer[1] === 'ㅗ') {
-                    if (jamo === 'ㅏ') return join(buffer[0], String.fromCharCode(0x116A), '');
-                    if (jamo === 'ㅐ') return join(buffer[0], String.fromCharCode(0x116B), '');
-                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x116C), '');
-                } else if (buffer[1] === 'ㅜ') {
-                    if (jamo === 'ㅓ') return join(buffer[0], String.fromCharCode(0x116F), '');
-                    if (jamo === 'ㅔ') return join(buffer[0], String.fromCharCode(0x1170), '');
-                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x1171), '');
-                } else if (buffer[1] === 'ㅡ') {
-                    if (jamo === 'ㅣ') return join(buffer[0], String.fromCharCode(0x1174), ''); 
-                }
+                var vowel = VOWEL_COMPOUND[buffer[1] + jamo];
+                if (vowel != null)
+                    return join(buffer[0], String.fromCharCode(vowel), '');
                     
             // merging consonant to existing syllable
             } else if (get_base(get_component(jamo, TRAIL)) === _JAMO_TRAIL) {
@@ -208,13 +206,20 @@ function parse_jamo(str, jamo) {
 }
 
 // erase jamo from the syllable under creation
-function erase(str) {
+function erase_jamo(str) {
     if (is_jamo(str) || !is_hangul(str))
         return "";
 
     var buffer = split(str);    
-    if (buffer[2] !== "")
+    if (buffer[2] !== "") {
+        var split_trail = normalise(buffer[2], TRAIL_COMPOUND);
+        if (split_trail !== buffer[2])
+            return join(buffer[0], buffer[1], split_trail[0]);
         return join(buffer[0], buffer[1], "");
-    else
+    } else {
+        var split_vowel = normalise(buffer[1], VOWEL_COMPOUND);
+        if (split_vowel !== buffer[1])
+            return join(buffer[0], split_vowel[0], '');
         return buffer[0];
+    }
 }
