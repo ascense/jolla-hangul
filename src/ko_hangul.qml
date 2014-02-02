@@ -100,7 +100,7 @@ KeyboardLayout {
     
     KeyboardRow {
         FunctionKey {
-            id: symbolKey
+            id: koSymbolKey
 
             property int _charactersWhenPressed
             property bool _quickPicking
