@@ -1,7 +1,7 @@
 Name: jolla-hangul
 Version: 0.2
 Release: 1%{?dist}
-Summary: Korean (hangul) input method for Sailfish OS
+Summary: Korean input method for Sailfish OS
 License: LGPLv2+
 Source: %{name}-%{version}.tar.gz
 URL: https://github.com/Ascense/jolla-hangul
@@ -9,7 +9,7 @@ Requires:   jolla-keyboard
 Requires:   jolla-xt9
 
 %description
-Korean (hangul) input method and virtual keyboard layout for Sailfish OS.
+Korean input method and virtual keyboard layout for Sailfish OS.
 
 %define debug_package %{nil}
 
@@ -38,4 +38,5 @@ rm -rf %{buildroot}
 /usr/share/maliit/plugins/com/jolla/layouts/ko_hangul.qml
 /usr/share/maliit/plugins/com/jolla/layouts/ko_hangul.conf
 /usr/share/maliit/plugins/com/jolla/layouts/ko_hangul/KoInputHandler.qml
+/usr/share/maliit/plugins/com/jolla/layouts/ko_hangul/KoSpacebarRow.qml
 /usr/share/maliit/plugins/com/jolla/layouts/ko_hangul/parser.js
