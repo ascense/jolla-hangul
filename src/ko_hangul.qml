@@ -7,9 +7,7 @@ import ".."
 KeyboardLayout {
     type: "ko_KR"
     
-    property int setActive: 0;
-    property int setSelectWidth: (portraitMode ? 55 : 105) * geometry.scaleRatio
-    
+    property int setActive: 0
     property variant setKeys: [[
         ["ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ", "ㅔ", "ㅐ",
          "ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ",
@@ -98,67 +96,5 @@ KeyboardLayout {
         BackspaceKey {}
     }
     
-    KeyboardRow {
-        FunctionKey {
-            id: koSymbolKey
-
-            property int _charactersWhenPressed
-            property bool _quickPicking
-
-            caption: attributes.inSymView ? "가" : (setActive ? "?123" : "ABC")
-            width: functionKeyWidth
-            keyType: KeyType.SymbolKey
-
-            onPressedChanged: {
-                if (pressed && !keyboard.inSymView && keyboard.lastInitialKey === symbolKey) {
-                    keyboard.deadKeyAccent = ""
-                    keyboard.toggleSymbolMode()
-                    _quickPicking = true
-                } else {
-                    _quickPicking = false
-                }
-
-                _charactersWhenPressed = keyboard.characterKeyCounter
-            }
-
-            onClicked: {
-                if (!_quickPicking || keyboard.characterKeyCounter > _charactersWhenPressed) {
-                    if (attributes.inSymView) {
-                        keyboard.toggleSymbolMode()
-                    } else {
-                        if (setActive)
-                            keyboard.toggleSymbolMode();
-                        setActive = !setActive;
-                    }
-                }
-            }
-
-            Rectangle {
-                color: parent.pressed ? Theme.highlightBackgroundColor : Theme.primaryColor
-                opacity: parent.pressed ? 0.6 : 0.17
-                radius: geometry.keyRadius
-
-                anchors.fill: parent
-                anchors.margins: Theme.paddingMedium
-            }
-        }
-        CharacterKey {
-            caption: ","
-            captionShifted: ","
-            width: punctuationKeyWidth
-            fixedWidth: true
-            separator: false
-        }
-        SpacebarKey {
-            fixedWidth: true
-        }
-        CharacterKey {
-            caption: "."
-            captionShifted: "."
-            width: punctuationKeyWidth
-            fixedWidth: true
-            separator: false
-        }
-        EnterKey {}
-    }
+    KoSpacebarRow { }
 }

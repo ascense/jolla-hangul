@@ -2,7 +2,7 @@ Name: jolla-hangul
 Version: 0.2
 Release: 1%{?dist}
 Summary: Korean (hangul) input method for Sailfish OS
-License: LGPLv2
+License: LGPLv2+
 Source: %{name}-%{version}.tar.gz
 URL: https://github.com/Ascense/jolla-hangul
 Requires:   jolla-keyboard
