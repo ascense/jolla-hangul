@@ -42,13 +42,15 @@ InputHandler {
             // if we are not inputting hangul, skip processing
             if (!Parser.is_jamo(pressedKey.text)) {
                 commit(preedit + pressedKey.text);
-            } else {
-                preedit = Parser.add_jamo(preedit, pressedKey.text)
-                
                 if (keyboard.shiftState !== ShiftState.LockedShift) {
                     keyboard.shiftState = ShiftState.NoShift
                 }
-
+            } else {
+                preedit = Parser.add_jamo(preedit, pressedKey.text)
+                if (keyboard.shiftState) {
+                    keyboard.shiftState = ShiftState.NoShift
+                }
+                
                 if (preedit.length > 1)
                     commit_partial(preedit[0], preedit[1]);
                 else
