@@ -27,7 +27,6 @@ InputHandler {
         } else if (pressedKey.key === Qt.Key_Return) {
             if (preedit !== "") {
                 commit(preedit)
-                handled = true
             }
         } else if (pressedKey.key === Qt.Key_Backspace && preedit !== "") {
             preedit = Parser.erase_jamo(preedit);
