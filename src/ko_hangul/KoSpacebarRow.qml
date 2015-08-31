@@ -66,17 +66,19 @@ KeyboardRow {
         captionShifted: ","
         width: punctuationKeyWidth
         fixedWidth: true
-        separator: false
+        separator: 0
     }
+    SpacebarKey {}
     SpacebarKey {
-        fixedWidth: true
+        active: splitActive
+        languageLabel: ""
     }
     CharacterKey {
         caption: "."
         captionShifted: "."
         width: punctuationKeyWidth
         fixedWidth: true
-        separator: false
+        separator: 0
     }
     EnterKey {}
 }
