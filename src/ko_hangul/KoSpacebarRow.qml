@@ -13,6 +13,9 @@
  * Neither the name of Nokia Corporation nor the names of its contributors may be
  * used to endorse or promote products derived from this software without specific
  * prior written permission.
+ * Neither the name of Jolla ltd nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
+ * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -34,40 +37,25 @@ import "../.."
 KeyboardRow {
     id: koSpacebarRow
     
-    FunctionKey {
+    splitIndex: 3
+    
+    SymbolKey {
         id: koSymbolKey
 
-        caption: attributes.inSymView ? "가" : (setActive ? "?123" : "ABC")
-        width: functionKeyWidth
-        keyType: KeyType.SymbolKey
+        caption: attributes.inSymView ? (setActive ? "가" : "ABC") : "?123"
 
         onClicked: {
-            // hack to get 3-way set selection for symbol key
-            if (attributes.inSymView) {
+            if (_quickPicking && keyboard.characterKeyCounter > _charactersWhenPressed) {
                 keyboard.toggleSymbolMode()
-            } else {
-                if (setActive)
-                    keyboard.toggleSymbolMode();
+            } if (!_quickPicking) {
+                if (attributes.inSymView) {
+                    keyboard.toggleSymbolMode()
+                }
                 setActive = !setActive;
             }
         }
-
-        Rectangle {
-            color: parent.pressed ? Theme.highlightBackgroundColor : Theme.primaryColor
-            opacity: parent.pressed ? 0.6 : 0.17
-            radius: geometry.keyRadius
-
-            anchors.fill: parent
-            anchors.margins: Theme.paddingMedium
-        }
     }
-    CharacterKey {
-        caption: ","
-        captionShifted: ","
-        width: punctuationKeyWidth
-        fixedWidth: true
-        separator: 0
-    }
+    ContextAwareCommaKey {}
     SpacebarKey {}
     SpacebarKey {
         active: splitActive
@@ -76,9 +64,9 @@ KeyboardRow {
     CharacterKey {
         caption: "."
         captionShifted: "."
-        width: punctuationKeyWidth
-        fixedWidth: true
-        separator: 0
+        implicitWidth: punctuationKeyWidth
+        fixedWidth: !splitActive
+        separator: SeparatorState.HiddenSeparator
     }
     EnterKey {}
 }
