@@ -1,5 +1,5 @@
 Name: keyboard-ko-hangul
-Version: 0.4
+Version: 0.4.1
 Release: 1%{?dist}
 Summary: Korean input method for Sailfish OS
 License: LGPLv2+
